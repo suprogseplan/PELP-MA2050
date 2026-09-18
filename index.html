@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PELP Maranhão 2050 — Painel Gerencial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2B54;
+  --navy-deep:#141B38;
+  --navy-soft:#2B3B6B;
+  --red:#D31E2B;
+  --red-soft:#FBE7E8;
+  --teal:#1B8FA0;
+  --teal-soft:#E4F4F6;
+  --teal-deep:#3D5A73;
+  --amber:#E0A320;
+  --amber-soft:#FCF1DC;
+  --green:#3FA66B;
+  --green-soft:#E5F5EC;
+  --gray:#9AA1B0;
+  --gray-soft:#EEF0F3;
+  --bg:#F3F4F7;
+  --card:#FFFFFF;
+  --border:#E4E6EC;
+  --text:#1B2033;
+  --text-muted:#6A7085;
+  --radius:12px;
+  --shadow:0 1px 2px rgba(20,27,56,.06), 0 4px 16px rgba(20,27,56,.05);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:14px;
+  line-height:1.5;
+}
+.display{font-family:'Archivo Black','Inter',sans-serif; letter-spacing:.2px;}
+::-webkit-scrollbar{height:10px;width:10px;}
+::-webkit-scrollbar-thumb{background:#c7cbd6;border-radius:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* ===== HEADER ===== */
+.topbar{
+  background:linear-gradient(120deg,var(--navy-deep) 0%, var(--navy) 55%, var(--navy-soft) 100%);
+  color:#fff;
+  padding:26px 32px 22px;
+  position:relative;
+  overflow:hidden;
+}
+.topbar::after{
+  content:"";
+  position:absolute; right:-60px; top:-80px; width:280px; height:280px;
+  background:conic-gradient(from 200deg, var(--teal), var(--amber), var(--red), var(--teal));
+  opacity:.15; border-radius:50%;
+  filter:blur(6px);
+}
+.topbar .eyebrow{
+  display:flex; align-items:center; gap:10px;
+  font-size:11px; letter-spacing:1.6px; text-transform:uppercase;
+  color:#B9C2E0; font-weight:600; margin-bottom:8px;
+}
+.topbar .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--amber);}
+.topbar h1{
+  margin:0; font-size:26px; line-height:1.15;
+  text-transform:uppercase;
+}
+.topbar h1 span{color:var(--amber);}
+.topbar .sub{
+  margin-top:6px; font-size:13.5px; color:#C9D0E8; max-width:760px;
+}
+.topbar .meta-row{
+  margin-top:18px; display:flex; flex-wrap:wrap; gap:10px 26px; position:relative; z-index:1;
+}
+.meta-chip{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  padding:7px 14px; border-radius:999px;
+  font-size:12px; color:#EAEDF7; display:flex; align-items:center; gap:7px;
+}
+.meta-chip b{color:#fff; font-weight:700;}
+.stripe{
+  height:6px; width:100%;
+  background:repeating-linear-gradient(115deg,
+    var(--amber) 0 26px, var(--teal) 26px 52px, var(--red) 52px 78px);
+}
+
+/* ===== LAYOUT ===== */
+.wrap{max-width:1440px; margin:0 auto; padding:22px 28px 60px;}
+.section-title{
+  display:flex; align-items:center; gap:10px;
+  font-size:13px; text-transform:uppercase; letter-spacing:1px; font-weight:800;
+  color:var(--navy); margin:34px 0 14px;
+}
+.section-title .bar{width:5px;height:16px;background:var(--amber);border-radius:2px;}
+.section-title small{
+  font-weight:500; text-transform:none; letter-spacing:0; color:var(--text-muted); font-size:12px;
+}
+
+/* ===== KPI CARDS ===== */
+.kpi-grid{
+  display:grid; grid-template-columns:repeat(6,1fr); gap:14px;
+}
+.kpi{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:16px 16px 14px; box-shadow:var(--shadow); position:relative; overflow:hidden;
+}
+.kpi::before{
+  content:""; position:absolute; left:0; top:0; bottom:0; width:4px;
+}
+.kpi.total::before{background:var(--navy);}
+.kpi.andamento::before{background:var(--teal);}
+.kpi.atraso::before{background:var(--red);}
+.kpi.naoiniciado::before{background:var(--gray);}
+.kpi.concluido::before{background:var(--green);}
+.kpi.marco::before{background:var(--amber);}
+.kpi .lbl{font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--text-muted); font-weight:700;}
+.kpi .val{font-size:28px; font-weight:800; margin-top:4px; font-family:'Archivo Black'; color:var(--navy);}
+.kpi.atraso .val{color:var(--red);}
+.kpi .sub{font-size:11.5px; color:var(--text-muted); margin-top:3px;}
+.kpi .sub b{color:var(--text);}
+
+/* progress bar overall */
+.progress-card{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:18px 20px; box-shadow:var(--shadow); margin-top:14px;
+  display:grid; grid-template-columns:1fr 1fr; gap:26px;
+}
+.progress-card.progress-card-single{grid-template-columns:1fr;}
+.progress-block .ptitle{font-size:11.5px; text-transform:uppercase; letter-spacing:.6px; font-weight:800; color:var(--text-muted); margin-bottom:8px;}
+.progress-bar-outer{
+  height:14px; background:var(--gray-soft); border-radius:8px; overflow:hidden; position:relative;
+}
+.progress-bar-inner{
+  height:100%; border-radius:8px;
+  background:linear-gradient(90deg,var(--teal),var(--navy));
+}
+.progress-numbers{display:flex; justify-content:space-between; margin-top:6px; font-size:12px; color:var(--text-muted);}
+.progress-numbers b{color:var(--navy); font-size:15px;}
+
+/* ===== ALERT BANNER ===== */
+.alert-banner{
+  background:var(--red-soft); border:1px solid #F3B9BD; border-left:5px solid var(--red);
+  border-radius:var(--radius); padding:14px 18px; margin-top:14px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.alert-banner.ok{background:var(--green-soft); border-color:#B9E4CC; border-left-color:var(--green);}
+.alert-banner .aicon{
+  width:34px;height:34px;border-radius:50%;background:var(--red);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex:none;
+}
+.alert-banner.ok .aicon{background:var(--green);}
+.alert-banner .atext strong{color:var(--red); font-size:14px;}
+.alert-banner.ok .atext strong{color:var(--green);}
+.alert-banner .atext p{margin:2px 0 0; font-size:12.8px; color:#5b2126;}
+.alert-banner.ok .atext p{color:#1f5c3c;}
+.alert-list{margin-top:10px; display:flex; flex-direction:column; gap:6px;}
+.alert-item{
+  background:#fff; border:1px solid #F3B9BD; border-radius:8px; padding:8px 12px;
+  display:flex; justify-content:space-between; gap:10px; align-items:center; font-size:12.5px;
+}
+.alert-item .ai-left b{color:var(--navy);}
+.alert-item .ai-tag{
+  background:var(--red); color:#fff; font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:6px; white-space:nowrap;
+}
+
+/* ===== FILTERS ===== */
+.filters-card{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:16px 20px; box-shadow:var(--shadow); margin-top:14px;
+}
+.filters-row{display:flex; flex-wrap:wrap; gap:22px;}
+.filter-group{flex:1; min-width:210px;}
+.filter-group .fg-title{
+  font-size:11px; text-transform:uppercase; letter-spacing:.6px; font-weight:800; color:var(--text-muted); margin-bottom:8px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.chips{display:flex; flex-wrap:wrap; gap:6px;}
+.chip{
+  border:1px solid var(--border); background:#fff; padding:5px 11px; border-radius:999px;
+  font-size:12px; cursor:pointer; user-select:none; color:var(--text); font-weight:600;
+  transition:all .12s ease;
+}
+.chip:hover{border-color:var(--navy);}
+.chip.active{background:var(--navy); border-color:var(--navy); color:#fff;}
+.chip .cnt{opacity:.65; font-weight:500; margin-left:3px;}
+.searchbox{
+  display:flex; align-items:center; gap:8px; border:1px solid var(--border); border-radius:8px;
+  padding:8px 12px; background:#fbfbfc;
+}
+.searchbox input{border:none; outline:none; background:transparent; font-size:13px; width:100%; font-family:inherit;}
+.filters-actions{display:flex; justify-content:flex-end; margin-top:12px;}
+.btn-reset{
+  border:1px solid var(--border); background:#fff; color:var(--navy); font-weight:700; font-size:12px;
+  padding:7px 14px; border-radius:8px; cursor:pointer;
+}
+.btn-reset:hover{background:var(--gray-soft);}
+
+/* ===== MILESTONES STRIP ===== */
+.milestones{
+  display:grid; grid-template-columns:repeat(5,1fr); gap:12px;
+}
+.ms-card{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:14px 14px 12px; box-shadow:var(--shadow); position:relative;
+}
+.ms-card .ms-top{display:flex; justify-content:space-between; align-items:flex-start;}
+.ms-badge{
+  width:30px;height:30px;border-radius:9px; display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:800; color:#fff; background:var(--amber); flex:none;
+}
+.ms-badge.late{background:var(--red);}
+.ms-badge.done{background:var(--green);}
+.ms-days{font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; background:var(--amber-soft); color:#8a6510;}
+.ms-days.late{background:var(--red-soft); color:var(--red);}
+.ms-days.done{background:var(--green-soft); color:var(--green);}
+.ms-name{font-size:12.5px; font-weight:700; color:var(--navy); margin-top:10px; line-height:1.3; min-height:32px;}
+.ms-date{font-size:11.5px; color:var(--text-muted); margin-top:6px;}
+.ms-macro{font-size:10px; text-transform:uppercase; letter-spacing:.4px; color:var(--text-muted); margin-top:8px; font-weight:700;}
+
+/* ===== NEXT ACTIONS ===== */
+.next-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+.na-card{
+  background:var(--card); border:1px solid var(--border); border-left:4px solid var(--teal);
+  border-radius:10px; padding:12px 14px; box-shadow:var(--shadow);
+}
+.na-card.ni{border-left-color:var(--gray);}
+.na-top{display:flex; justify-content:space-between; gap:8px; align-items:flex-start;}
+.na-days{
+  font-size:10.5px; font-weight:800; background:var(--teal-soft); color:var(--teal); padding:3px 8px; border-radius:6px; white-space:nowrap;
+}
+.na-card.ni .na-days{background:var(--gray-soft); color:#5b6072;}
+.na-title{font-size:12.8px; font-weight:700; color:var(--navy); margin-top:8px; line-height:1.35;}
+.na-meta{font-size:11px; color:var(--text-muted); margin-top:8px; display:flex; justify-content:space-between;}
+.na-resp{
+  display:inline-flex; gap:4px; flex-wrap:wrap; margin-top:8px;
+}
+.tag-resp{
+  font-size:10px; font-weight:700; background:var(--navy); color:#fff; padding:2px 7px; border-radius:5px;
+}
+.empty-note{
+  padding:30px; text-align:center; color:var(--text-muted); font-size:13px;
+  background:var(--card); border:1px dashed var(--border); border-radius:var(--radius);
+}
+
+/* ===== GANTT ===== */
+.gantt-card{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.gantt-legend{
+  display:flex; flex-wrap:wrap; gap:16px; padding:12px 18px; border-bottom:1px solid var(--border);
+  font-size:11.5px; color:var(--text-muted); align-items:center;
+}
+.leg-item{display:flex; align-items:center; gap:6px;}
+.leg-swatch{width:11px;height:11px;border-radius:3px;}
+.gantt-scroll{overflow-x:auto; overflow-y:hidden;}
+.gantt-inner{position:relative;}
+.gantt-body-wrap{display:flex;}
+.gantt-labels{
+  flex:none; width:300px; border-right:1px solid var(--border); background:#fbfbfd;
+  position:sticky; left:0; z-index:3;
+}
+.gantt-timeline{flex:none; position:relative;}
+.g-month-row{
+  height:30px; border-bottom:1px solid var(--border); position:relative; background:#fbfbfd;
+}
+.g-month-row .g-label-spacer{height:30px;}
+.g-month{
+  position:absolute; top:0; height:30px; border-left:1px solid var(--border);
+  font-size:10.5px; color:var(--text-muted); font-weight:700; padding:7px 0 0 6px; text-transform:uppercase;
+}
+.g-group-header{
+  height:32px; display:flex; align-items:center; padding:0 12px; font-size:12px; font-weight:800;
+  color:#fff; cursor:pointer; user-select:none; gap:8px;
+}
+.g-group-header .gh-caret{transition:transform .15s ease; font-size:10px;}
+.g-group-header.collapsed .gh-caret{transform:rotate(-90deg);}
+.g-group-header .gh-count{
+  margin-left:auto; background:rgba(255,255,255,.22); font-size:10.5px; padding:2px 8px; border-radius:999px; font-weight:700;
+}
+.g-timeline-group-bg{height:32px;}
+.g-row-label{
+  height:28px; display:flex; align-items:center; padding:0 12px 0 22px; font-size:11.5px; gap:6px;
+  border-bottom:1px solid #F0F1F5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  color:var(--text);
+}
+.g-row-label .g-id{
+  color:#fff; background:var(--gray); font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:4px; flex:none;
+}
+.g-row-label.marco-row .g-id{background:var(--amber);}
+.g-row-track{
+  height:28px; position:relative; border-bottom:1px solid #F0F1F5;
+}
+.g-bar{
+  position:absolute; top:6px; height:16px; border-radius:5px;
+  display:flex; align-items:center; box-shadow:0 1px 2px rgba(0,0,0,.15);
+  cursor:default;
+}
+.g-bar .g-bar-fill{
+  position:absolute; left:0; top:0; bottom:0; background:rgba(255,255,255,.35); border-radius:5px 0 0 5px;
+}
+.g-milestone{
+  position:absolute; top:5px; width:16px; height:16px; transform:translateX(-8px) rotate(45deg);
+  border-radius:3px; box-shadow:0 1px 3px rgba(0,0,0,.25);
+}
+.g-today-line{
+  position:absolute; top:0; bottom:0; width:2px; background:var(--red); z-index:2;
+}
+.g-today-tag{
+  position:absolute; top:0; transform:translateX(-50%); background:var(--red); color:#fff; font-size:10px;
+  font-weight:800; padding:2px 6px; border-radius:0 0 5px 5px; white-space:nowrap; z-index:2;
+}
+.g-grid-line{position:absolute; top:0; bottom:0; width:1px; background:#EEF0F4;}
+
+/* ===== TABLE ===== */
+.table-card{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.table-scroll{overflow-x:auto;}
+table.activities{width:100%; border-collapse:collapse; font-size:12.3px; min-width:1520px;}
+table.activities thead th{
+  background:var(--navy); color:#fff; text-align:left; padding:10px 12px; font-size:10.5px;
+  text-transform:uppercase; letter-spacing:.4px; font-weight:700; position:sticky; top:0;
+}
+table.activities tbody td{padding:9px 12px; border-bottom:1px solid #F0F1F5; vertical-align:top;}
+table.activities tbody tr:hover{background:#FAFBFD;}
+table.activities tbody tr.is-late{background:#FEF6F6;}
+.badge-status{
+  font-size:10px; font-weight:800; padding:3px 9px; border-radius:999px; white-space:nowrap; display:inline-block;
+}
+.badge-status.ni{background:var(--gray-soft); color:#565c6e;}
+.badge-status.and{background:var(--teal-soft); color:var(--teal);}
+.badge-status.atr{background:var(--red-soft); color:var(--red);}
+.badge-status.con{background:var(--green-soft); color:var(--green);}
+.badge-status.mar{background:var(--amber-soft); color:#8a6510;}
+.mini-bar-outer{width:70px; height:6px; background:var(--gray-soft); border-radius:4px; overflow:hidden; margin-top:4px;}
+.mini-bar-inner{height:100%; background:var(--teal);}
+.resp-pill{font-size:9.5px; font-weight:700; background:var(--navy); color:#fff; padding:2px 6px; border-radius:5px; margin:1px 2px 0 0; display:inline-block;}
+.macro-pill{font-size:9.5px; font-weight:700; padding:2px 7px; border-radius:5px; color:#fff; display:inline-block;}
+.ppa-pill{font-size:9px; font-weight:700; border:1px solid var(--amber); color:#8a6510; padding:1px 6px; border-radius:5px; display:inline-block; margin-top:4px;}
+td.col-atividade{max-width:260px;}
+td.col-atividade .etapa{font-size:10.5px; color:var(--text-muted); margin-bottom:2px;}
+td.col-resultado{max-width:300px; color:var(--text-muted); font-size:11.8px; line-height:1.4;}
+.result-count{font-size:12px; color:var(--text-muted); padding:12px 18px;}
+
+footer{
+  margin-top:40px; padding:22px 28px; text-align:center; color:var(--text-muted); font-size:11.5px;
+  border-top:1px solid var(--border);
+}
+footer b{color:var(--navy);}
+
+@media (max-width:1100px){
+  .kpi-grid{grid-template-columns:repeat(3,1fr);}
+  .progress-card{grid-template-columns:1fr;}
+  .milestones{grid-template-columns:repeat(2,1fr);}
+  .next-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="eyebrow"><span class="dot"></span>SUPROG / SEPLAN — GOVERNO DO MARANHÃO</div>
+  <h1 class="display">PELP Maranhão <span>2050</span> — Painel Gerencial</h1>
+  <div class="sub">Acompanhamento executivo do cronograma de revisão do Plano Estratégico de Longo Prazo. Visão consolidada de prazos, responsáveis, atrasos e marcos do projeto.</div>
+  <div class="meta-row">
+    <div class="meta-chip">📅 Período do projeto: <b>jul/2026 – mai/2027</b></div>
+    <div class="meta-chip">📍 Posição em: <b id="metaHoje">18/09/2026</b></div>
+    <div class="meta-chip">🗂️ Atividades monitoradas: <b id="metaTotal">—</b></div>
+    <div class="meta-chip">🏁 Marcos do projeto: <b>5</b></div>
+  </div>
+</div>
+<div class="stripe"></div>
+
+<div class="wrap">
+
+  <!-- KPIs -->
+  <div class="section-title"><span class="bar"></span>Visão Geral <small>indicadores atualizados conforme filtros selecionados</small></div>
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <div class="progress-card progress-card-single">
+    <div class="progress-block">
+      <div class="ptitle">Tempo decorrido do cronograma</div>
+      <div class="progress-bar-outer"><div class="progress-bar-inner" id="pbTempo" style="width:0%; background:linear-gradient(90deg,var(--amber),var(--navy));"></div></div>
+      <div class="progress-numbers"><span id="pbTempoIni">jul/26</span><b id="pbTempoLabel">0%</b><span id="pbTempoFim">mai/27</span></div>
+    </div>
+  </div>
+
+  <div id="alertBanner"></div>
+
+  <!-- FILTERS -->
+  <div class="section-title"><span class="bar"></span>Filtros</div>
+  <div class="filters-card">
+    <div class="filters-row">
+      <div class="filter-group">
+        <div class="fg-title">Macro-processo</div>
+        <div class="chips" id="chipsMacro"></div>
+      </div>
+      <div class="filter-group">
+        <div class="fg-title">Responsável</div>
+        <div class="chips" id="chipsResp"></div>
+      </div>
+      <div class="filter-group">
+        <div class="fg-title">Status</div>
+        <div class="chips" id="chipsStatus"></div>
+      </div>
+      <div class="filter-group" style="max-width:260px;">
+        <div class="fg-title">Buscar atividade</div>
+        <div class="searchbox">🔎<input type="text" id="searchInput" placeholder="Digite para buscar..."></div>
+      </div>
+    </div>
+    <div class="filters-actions"><button class="btn-reset" id="btnReset">Limpar filtros</button></div>
+  </div>
+
+  <!-- GANTT -->
+  <div class="section-title"><span class="bar"></span>Cronograma Executivo — Gráfico de Gantt</div>
+  <div class="gantt-card">
+    <div class="gantt-legend" id="ganttLegend"></div>
+    <div class="gantt-scroll">
+      <div class="gantt-inner" id="ganttInner"></div>
+    </div>
+  </div>
+
+  <!-- MILESTONES -->
+  <div class="section-title"><span class="bar"></span>Marcos do Projeto</div>
+  <div class="milestones" id="milestonesGrid"></div>
+
+  <!-- NEXT ACTIONS -->
+  <div class="section-title"><span class="bar"></span>Próximas Ações <small>atividades em andamento ou a iniciar nos próximos 45 dias</small></div>
+  <div id="nextActionsWrap"></div>
+
+  <!-- TABLE -->
+  <div class="section-title"><span class="bar"></span>Detalhamento das Atividades</div>
+  <div class="table-card">
+    <div class="result-count" id="resultCount"></div>
+    <div class="table-scroll">
+      <table class="activities">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Macro-processo</th>
+            <th>Atividade</th>
+            <th>Responsável</th>
+            <th>Início</th>
+            <th>Término</th>
+            <th>Status</th>
+            <th>% Concl.</th>
+            <th>Resultado Esperado</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    Painel gerado a partir do <b>Cronograma Executivo — Revisão do PELP Maranhão 2050</b> (SUPROG/SEPLAN). Identidade visual conforme manual de marca Maranhão 2050.
+  </footer>
+</div>
+
+<script id="data-json" type="application/json">
+[{"id":"1","macro":"Pré-Produtos","etapa":"Avaliação documental do PELP","atividade":"Levantar produtos de PELP vigente, relatórios e atas da Comissão MA2050","responsavel":"SUPROG","inicio":"2026-07-01","termino":"2026-07-09","duracao":8,"status_original":"Concluído","resultado":"Levantamento consolidado dos produtos do PELP vigente, relatórios e atas da Comissão MA2050 disponível para análise","obs":"Ultilização do Produto 1.3 da macroplan, contendo a implementação sugerida de todas as etapas de atualização do PELP, bem como construção dos demais produtos e cenários","pct":0,"ppa":null,"marco":false},{"id":"2","macro":"Pré-Produtos","etapa":"Avaliação documental do PELP","atividade":"Identificar macroprocessos definidos e sistematizar estrutura de revisão prevista","responsavel":"SUPROG","inicio":"2026-07-10","termino":"2026-07-17","duracao":7,"status_original":"Concluído","resultado":"Estrutura dos macroprocessos de revisão sistematizada e compreendida pela equipe técnica, servindo de referência metodológica para as etapas seguintes","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"3","macro":"Pré-Produtos","etapa":"Definir metodologia de atualização do Plano","atividade":"Definir abordagem participativa, técnica e institucional","responsavel":"SUPROG","inicio":"2026-07-13","termino":"2026-07-16","duracao":3,"status_original":"Concluído","resultado":"Abordagem metodológica definida, contemplando as dimensões participativa, técnica e institucional da revisão","obs":"Analise situacional - Formularios e entrevistas aplicados a especialistas e membros da comissao e consulta publica aberta","pct":0,"ppa":null,"marco":false},{"id":"4","macro":"Pré-Produtos","etapa":"Definir metodologia de atualização do Plano","atividade":"Alinhar metodologia com equipe e elaborar protocolo de revisão por produto","responsavel":"SUPROG","inicio":"2026-07-17","termino":"2026-07-24","duracao":7,"status_original":"Concluído","resultado":"Processos de revisão por produto elaborado e alinhado com a equipe técnica, pronto para orientar a execução das etapas","obs":"Analise situacional - Passo a passo definido ","pct":0,"ppa":null,"marco":false},{"id":"5","macro":"Pré-Produtos","etapa":"Elaborar e validar cronograma da revisão","atividade":"Definir etapas, responsáveis, marcos e prazos","responsavel":"SUPROG","inicio":"2026-07-20","termino":"2026-07-23","duracao":3,"status_original":"Concluído","resultado":"Estrutura do cronograma definida, com etapas, responsáveis, marcos e prazos estabelecidos","obs":"Incluir marcos de entrega, revisões e validações institucionais","pct":0,"ppa":null,"marco":false},{"id":"6","macro":"Pré-Produtos","etapa":"Elaborar e validar cronograma da revisão","atividade":"Submeter à validação da equipe gestora","responsavel":"SUPROG","inicio":"2026-07-24","termino":"2026-07-31","duracao":7,"status_original":"Concluído","resultado":"Cronograma de revisão validado pela equipe gestora, autorizando o início da execução","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"M1","macro":"Pré-Produtos","etapa":"Marco: Plano de trabalho aprovado","atividade":"Marco: Plano de trabalho aprovado","responsavel":"SUPROG","inicio":"2026-07-31","termino":"2026-07-31","duracao":1,"status_original":"Concluído","resultado":"Plano de trabalho aprovado, consolidando metodologia e cronograma validados institucionalmente","obs":null,"pct":0,"ppa":null,"marco":true},{"id":"7","macro":"Análise Situacional","etapa":"Diagnóstico socioeconômico quantitativo e comparativo","atividade":"Coletar e atualizar indicadores dos 5 eixos (IBGE, Inep, Datasus)","responsavel":"IMESC","inicio":"2026-07-27","termino":"2026-08-07","duracao":11,"status_original":"Concluído","resultado":"Indicadores dos 5 eixos coletados e atualizados a partir de fontes oficiais (IBGE, Inep, Datasus)","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"8","macro":"Análise Situacional","etapa":"Análise de lacunas no Diagnóstico Situacional vigente","atividade":"Comparar diagnóstico atual (versão original Macroplan) com diagnosticos recentes","responsavel":"SUPROG","inicio":"2026-08-03","termino":"2026-08-07","duracao":4,"status_original":"Concluído","resultado":"Comparação entre o diagnóstico situacional vigente e diagnósticos recentes realizados por outras instituições, evidenciando divergências e desatualizações","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"9","macro":"Análise Situacional","etapa":"Análise de lacunas no Diagnóstico Situacional vigente","atividade":"Mapear indicadores desatualizados ou ausentes","responsavel":"SUPROG/IMESC","inicio":"2026-08-10","termino":"2026-08-13","duracao":3,"status_original":"Concluído","resultado":"Indicadores desatualizados ou ausentes mapeados, subsidiando a atualização do diagnóstico","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"10","macro":"Análise Situacional","etapa":"Análise qualitativa: relatórios e documentos estratégicos","atividade":"Compilar manuais, guias metodológicos e documentos estratégicos (Brasil 2050 e demais estados)","responsavel":"SUPROG","inicio":"2026-08-10","termino":"2026-08-14","duracao":4,"status_original":"Concluído","resultado":"Acervo de manuais, guias metodológicos e planos estratégicos de referência (Brasil 2050 e demais estados) compilado","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"11","macro":"Análise Situacional","etapa":"Análise qualitativa: relatórios e documentos estratégicos","atividade":"Analisar relatórios de execução do PELP","responsavel":"SUPROG","inicio":"2026-08-10","termino":"2026-08-14","duracao":4,"status_original":"Concluído","resultado":"Relatórios de execução do PELP analisados, com o desempenho dos indicadores frente aos desafios e diretrizes avaliado","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"12","macro":"Análise Situacional","etapa":"Pesquisa qualitativa com a Comissão Maranhão 2050","atividade":"Elaborar roteiro semiestruturado dos grupos de trabalho das camaras tecnicas","responsavel":"SUPROG","inicio":"2026-08-10","termino":"2026-08-14","duracao":4,"status_original":"Concluído","resultado":"Roteiro semiestruturado de entrevistas elaborado para subsidiar a escuta qualitativa da Comissão MA2050 sobre o diagnostico situacional","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"13","macro":"Análise Situacional","etapa":"Diagnóstico socioeconômico quantitativo e comparativo","atividade":"Comparar desempenho do Maranhão com estados de referência e mapear evolução de indicadores de impacto, resultado e produto","responsavel":"IMESC","inicio":"2026-08-10","termino":"2026-08-21","duracao":11,"status_original":"Em andamento","resultado":"Desempenho do Maranhão comparado a estados de referência, com evolução dos indicadores de impacto, resultado e produto mapeada","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"14","macro":"Análise Situacional","etapa":"Análise de lacunas no Diagnóstico Situacional vigente","atividade":"Listar lacunas temáticas por eixo","responsavel":"SUPROG/IMESC","inicio":"2026-08-14","termino":"2026-08-17","duracao":3,"status_original":"Concluído","resultado":"Lacunas temáticas do diagnóstico listadas por eixo estratégico, consolidando os pontos a serem atualizados","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"15","macro":"Análise Situacional","etapa":"Diagnóstico socioeconômico quantitativo e comparativo","atividade":"Georreferenciar dados por macrorregião e Eixos de desenvolvimento","responsavel":"IMESC","inicio":"2026-08-24","termino":"2026-09-04","duracao":11,"status_original":"Em andamento","resultado":"Base de dados georreferenciada por macrorregião e eixo de desenvolvimento, pronta para subsidiar a análise territorial","obs":"Incorporar dados IBGE, Inep, Datasus; georreferenciar por macrorregião","pct":0,"ppa":null,"marco":false},{"id":"16","macro":"Análise Situacional","etapa":"Pesquisa qualitativa com a Comissão Maranhão 2050","atividade":"Aplicar formulario junto aos membros da Comissão MA2050","responsavel":"SUPROG/CMMA2050","inicio":"2026-08-24","termino":"2026-09-16","duracao":23,"status_original":"Concluído","resultado":"Formulário aplicado junto aos membros da Comissão MA2050, com percepções sobre avanços, gargalos e prioridades coletadas","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"17","macro":"Análise Situacional","etapa":"Pesquisa qualitativa com a Comissão Maranhão 2050","atividade":"Executar grupos tematicos com as camaras tecnicas par revisao de ativos e passivos ","responsavel":"SUPROG","inicio":"2026-08-31","termino":"2026-09-04","duracao":4,"status_original":"Concluído","resultado":"Roteiro semiestruturado de entrevistas aplicado para subsidiar a escuta qualitativa da Comissão MA2050 sobre o diagnostico situacional","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"18","macro":"Análise Situacional","etapa":"Pesquisa qualitativa com a Comissão Maranhão 2050","atividade":"Consolidar percepções sobre avanços, gargalos e prioridades do PELP e ativos e passivos","responsavel":"SUPROG/CMMA2050","inicio":"2026-09-07","termino":"2026-09-24","duracao":17,"status_original":"Em andamento","resultado":"Percepções da Comissão sobre avanços, gargalos e prioridades do PELP consolidadas, subsidiando o diagnóstico qualitativo","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"19","macro":"Análise Situacional","etapa":"Diagnóstico socioeconômico quantitativo e comparativo","atividade":"Analisar e consolidar o diagnóstico Situacional","responsavel":"SUPROG","inicio":"2026-09-10","termino":"2026-09-30","duracao":20,"status_original":"Em andamento","resultado":"Diagnostico situacional elaborado pelo IMESC validado","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"20","macro":"Análise Situacional","etapa":"Pesquisa qualitativa com a Comissão Maranhão 2050","atividade":"Validar a consolidação dos ativos e passivos com as câmaras Tecnicas","responsavel":"SUPROG/CMMA2050","inicio":"2026-09-24","termino":"2026-09-25","duracao":1,"status_original":"Não iniciado","resultado":"Atualização dos Ativos e passivos consolidada","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"21","macro":"Análise Situacional","etapa":"Apresentação do diagnóstico preliminar à Comissão MA2050 e Câmaras Técnicas","atividade":"Apresentar versão preliminar do diagnóstico situacional","responsavel":"SUPROG/CMMA2050","inicio":"2026-09-24","termino":"2026-09-29","duracao":5,"status_original":"Não iniciado","resultado":"Versão preliminar do diagnóstico situacional apresentada à Comissão MA2050 e às Câmaras Técnicas","obs":"Realizar ao menos 1 sessão com Câmaras Técnicas e 1 com Comissão Plena","pct":0,"ppa":null,"marco":false},{"id":"22","macro":"Análise Situacional","etapa":"Apresentação do diagnóstico preliminar à Comissão MA2050 e Câmaras Técnicas","atividade":"Coletar contribuições dos membros da estrutura de Governança do PELP","responsavel":"SUPROG/CMMA2050","inicio":"2026-09-24","termino":"2026-09-30","duracao":6,"status_original":"Não iniciado","resultado":"Contribuições dos membros da estrutura de governança do PELP ao diagnóstico preliminar coletadas e sistematizadas","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"23","macro":"Análise Situacional","etapa":"Apresentação do diagnóstico preliminar à Comissão MA2050 e Câmaras Técnicas","atividade":"Incorporar ajustes e validar diagnóstico consolidado","responsavel":"SUPROG","inicio":"2026-09-28","termino":"2026-10-02","duracao":4,"status_original":"Não iniciado","resultado":"Ajustes incorporados e diagnóstico consolidado validado junto à Comissão PELP","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"24","macro":"Análise Situacional","etapa":"Consolidar Diagnóstico de Análise Situacional","atividade":"Consolidar texto final do diagnóstico integrando análises quantitativa e qualitativa","responsavel":"SUPROG","inicio":"2026-09-28","termino":"2026-10-09","duracao":11,"status_original":"Não iniciado","resultado":"Texto final do Diagnóstico de Análise Situacional consolidado, integrando as análises quantitativa e qualitativa","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"25","macro":"Análise Situacional","etapa":"Consolidar Diagnóstico de Análise Situacional","atividade":"Elaborar versão resumo executivo","responsavel":"SUPROG","inicio":"2026-10-05","termino":"2026-10-09","duracao":4,"status_original":"Não iniciado","resultado":"Versão resumo executivo do Diagnóstico de Análise Situacional elaborada","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"26","macro":"Análise Situacional","etapa":"Consolidar Diagnóstico de Análise Situacional","atividade":"Revisar internamente com equipe técnica e validar com gestores","responsavel":"SUPROG","inicio":"2026-10-12","termino":"2026-10-16","duracao":4,"status_original":"Não iniciado","resultado":"Diagnóstico revisado internamente pela equipe técnica e validado pelos gestores, pronto para aprovação final","obs":"Entregar versão completa e Sumario Executivo","pct":0,"ppa":null,"marco":false},{"id":"27","macro":"Análise Situacional","etapa":"Análise qualitativa: relatórios e documentos estratégicos","atividade":"Verificar desenho dos desafios e diretrizes frente aos indicadores ultilizados","responsavel":"IMESC","inicio":"2026-10-26","termino":"2026-10-30","duracao":4,"status_original":"Não iniciado","resultado":"Aderência entre desafios, diretrizes e indicadores verificada","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"28","macro":"Análise Situacional","etapa":"Análise qualitativa: relatórios e documentos estratégicos","atividade":"Verificar desenho dos desafios e diretrizes frente às iniciativas e projetos do estado","responsavel":"SUPROG","inicio":"2026-10-26","termino":"2026-10-30","duracao":4,"status_original":"Não iniciado","resultado":"Aderência entre desafios, diretrizes e iniciativas/projetos em curso no estado verificada","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"M2","macro":"Análise Situacional","etapa":"Marco: Diagnóstico Situacional consolidado e aprovado","atividade":"Marco: Diagnóstico Situacional consolidado e aprovado","responsavel":"SUPROG","inicio":"2026-10-16","termino":"2026-10-16","duracao":1,"status_original":"Marco","resultado":"Diagnóstico de Análise Situacional finalizado, revisado e formalmente aprovado pela Comissão MA2050","obs":null,"pct":0,"ppa":null,"marco":true},{"id":"29","macro":"Revisão dos Desafios e Metas","etapa":"Delineamento de bases de dados para indicadores estratégicos","atividade":"Mapear fontes de dados disponíveis por eixo","responsavel":"IMESC","inicio":"2026-10-19","termino":"2026-10-23","duracao":4,"status_original":"Não iniciado","resultado":"Fontes de dados disponíveis mapeadas por eixo estratégico para subsidiar a atualização dos indicadores","obs":"Ultilizar lista de indicadores da Atividade 8","pct":0,"ppa":null,"marco":false},{"id":"30","macro":"Revisão dos Desafios e Metas","etapa":"Delineamento de bases de dados para indicadores estratégicos","atividade":"Definir periodicidade e responsáveis por atualização","responsavel":"SUPROG","inicio":"2026-10-21","termino":"2026-10-28","duracao":7,"status_original":"Não iniciado","resultado":"Periodicidade de atualização e responsáveis pelos indicadores estratégicos definidos","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"31","macro":"Revisão dos Desafios e Metas","etapa":"Revisão de desafios e estratégias por eixo de desenvolvimento","atividade":"Realizar pesquisas com especialistas por eixo estratégico","responsavel":"SUPROG/CMMA2050","inicio":"2026-10-26","termino":"2026-10-30","duracao":4,"status_original":"Não iniciado","resultado":"Encontros realizados por eixo estratégico, com contribuições de especialistas e academia consolidadas","obs":"Realizar encontros por eixo; consolidar contribuições com academia e especialistas","pct":0,"ppa":null,"marco":false},{"id":"32","macro":"Revisão dos Desafios e Metas","etapa":"Delineamento de bases de dados para indicadores estratégicos","atividade":"Selecionar e validar indicadores de impacto revisados de acordo com os desafios e diretrizes atualizadas","responsavel":"SUPROG/IMESC","inicio":"2026-10-29","termino":"2026-11-06","duracao":8,"status_original":"Não iniciado","resultado":"Indicadores de impacto revisados selecionados e validados tecnicamente","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"33","macro":"Revisão dos Desafios e Metas","etapa":"Revisão de desafios e estratégias por eixo de desenvolvimento","atividade":"Revisar desafios e estratégias dos 5 eixos com base no diagnostico situacional","responsavel":"SUPROG/IMESC","inicio":"2026-11-02","termino":"2026-11-10","duracao":8,"status_original":"Não iniciado","resultado":"Desafios e estratégias dos 5 eixos estratégicos revisados","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"34","macro":"Revisão dos Desafios e Metas","etapa":"Atualização das metas de curto, médio e longo prazo","atividade":"Revisitar metas dos 5 eixos com base no diagnóstico situacional","responsavel":"SUPROG/IMESC","inicio":"2026-11-09","termino":"2026-11-13","duracao":4,"status_original":"Não iniciado","resultado":"Metas de curto, médio e longo prazo dos 5 eixos revisitadas à luz do diagnóstico situacional atualizado","obs":"Metas mensuráveis com linha de base definida","pct":0,"ppa":null,"marco":false},{"id":"35","macro":"Revisão dos Desafios e Metas","etapa":"Revisão de desafios e estratégias por eixo de desenvolvimento","atividade":"Incorporar novas oportunidades e ameaças do ambiente externo","responsavel":"IMESC","inicio":"2026-11-11","termino":"2026-11-13","duracao":2,"status_original":"Não iniciado","resultado":"Novas oportunidades e ameaças do ambiente externo incorporadas à análise estratégica","obs":"Ultilizar a análise situacional atualizada como base de definição","pct":0,"ppa":null,"marco":false},{"id":"36","macro":"Revisão dos Desafios e Metas","etapa":"Revisão de desafios e estratégias por eixo de desenvolvimento","atividade":"Atualizar cenários de referência e tendências de longo prazo","responsavel":"IMESC","inicio":"2026-11-13","termino":"2026-11-20","duracao":7,"status_original":"Não iniciado","resultado":"Cenários de referência e tendências de longo prazo atualizados","obs":"Ultilizar a análise situacional atualizada como base de definição","pct":0,"ppa":null,"marco":false},{"id":"37","macro":"Revisão dos Desafios e Metas","etapa":"Atualização das metas de curto, médio e longo prazo","atividade":"Estabelecer linha de base atualizada","responsavel":"IMESC","inicio":"2026-11-16","termino":"2026-11-20","duracao":4,"status_original":"Não iniciado","resultado":"Linha de base atualizada estabelecida para mensuração das metas revisadas","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"38","macro":"Revisão dos Desafios e Metas","etapa":"Atualizar Visão de Futuro territorializada","atividade":"Revisar metas territorializadas por macrorregião","responsavel":"IMESC","inicio":"2026-11-16","termino":"2026-11-20","duracao":4,"status_original":"Não iniciado","resultado":"Metas territorializadas por macrorregião revisadas","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"39","macro":"Revisão dos Desafios e Metas","etapa":"Atualizar Visão de Futuro territorializada","atividade":"Garantir cobertura das 9 macrorregiões do Maranhão","responsavel":"IMESC","inicio":"2026-11-23","termino":"2026-11-26","duracao":3,"status_original":"Não iniciado","resultado":"Cobertura das 9 macrorregiões de planejamento do Maranhão assegurada na Visão de Futuro territorializada","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"40","macro":"Revisão dos Desafios e Metas","etapa":"Atualização das metas de curto, médio e longo prazo","atividade":"Garantir coerência com Visão de Futuro e PPA","responsavel":"SUPROG","inicio":"2026-11-23","termino":"2026-11-27","duracao":4,"status_original":"Não iniciado","resultado":"Coerência entre metas revisadas, Visão de Futuro e ciclo do PPA 2028-2031 assegurada","obs":null,"pct":0,"ppa":"PPA 2028-2031","marco":false},{"id":"41","macro":"Revisão dos Desafios e Metas","etapa":"Atualizar Visão de Futuro territorializada","atividade":"Alinhar com desafios revisados por eixo","responsavel":"SUPROG/IMESC","inicio":"2026-11-27","termino":"2026-11-30","duracao":3,"status_original":"Não iniciado","resultado":"Visão de Futuro territorializada alinhada aos desafios revisados por eixo estratégico","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"42","macro":"Revisão dos Desafios e Metas","etapa":"Validação dos indicadores de impacto com especialistas e academia","atividade":"Promover debate técnico com especialistas e academia","responsavel":"SUPROG/CMMA2050","inicio":"2026-11-30","termino":"2026-11-30","duracao":0,"status_original":"Não iniciado","resultado":"Encontro técnico com especialistas e academia realizado, com contribuições e deliberações registradas em ata","obs":"Registrar contribuições e deliberações em ata","pct":0,"ppa":null,"marco":false},{"id":"43","macro":"Revisão dos Desafios e Metas","etapa":"Atualização do Mapa Estratégico Detalhado","atividade":"Atualizar mapa estratégico geral e territorializado","responsavel":"SUPROG/IMESC","inicio":"2026-11-30","termino":"2026-12-04","duracao":4,"status_original":"Não iniciado","resultado":"Mapa Estratégico Detalhado atualizado nas versões geral e territorializada","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"44","macro":"Revisão dos Desafios e Metas","etapa":"Validação dos indicadores de impacto com especialistas e academia","atividade":"Submeter indicadores revisados à avaliação","responsavel":"SUPROG","inicio":"2026-12-01","termino":"2026-12-03","duracao":2,"status_original":"Não iniciado","resultado":"Indicadores de impacto revisados submetidos à avaliação técnica de especialistas","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"45","macro":"Revisão dos Desafios e Metas","etapa":"Validação dos indicadores de impacto com especialistas e academia","atividade":"Incorporar ajustes e melhorias","responsavel":"SUPROG","inicio":"2026-12-04","termino":"2026-12-08","duracao":4,"status_original":"Não iniciado","resultado":"Ajustes e melhorias sugeridos pelos especialistas incorporados aos indicadores revisados","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"46","macro":"Revisão dos Desafios e Metas","etapa":"Validação dos indicadores de impacto com especialistas e academia","atividade":"Validar indicadores de impacto revisados","responsavel":"SUPROG","inicio":"2026-12-04","termino":"2026-12-09","duracao":5,"status_original":"Não iniciado","resultado":"Indicadores de impacto revisados formalmente validados","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"47","macro":"Revisão dos Desafios e Metas","etapa":"Atualização do Mapa Estratégico Detalhado","atividade":"Consolidar visão de futuro revisada","responsavel":"SUPROG","inicio":"2026-12-07","termino":"2026-12-10","duracao":3,"status_original":"Não iniciado","resultado":"Visão de Futuro revisada consolidada, integrando desafios, metas e mapa estratégico atualizados","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"48","macro":"Revisão dos Desafios e Metas","etapa":"Atualização do Mapa Estratégico Detalhado","atividade":"Produzir versão gráfica e textual alinhada aos eixos e desafios revisados","responsavel":"SUPROG","inicio":"2026-12-11","termino":"2026-12-14","duracao":3,"status_original":"Não iniciado","resultado":"Versão gráfica e textual do Mapa Estratégico produzida, alinhada aos eixos e desafios revisados","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"49","macro":"Revisão dos Desafios e Metas","etapa":"Consolidar Desafios e Metas do PELP","atividade":"Elaborar versão resumo executivo e versão completa e submeter à validação e aprovação da Comissão PELP","responsavel":"SUPROG","inicio":"2026-12-14","termino":"2026-12-17","duracao":3,"status_original":"Não iniciado","resultado":"Versões resumo executivo e completa dos Desafios e Metas do PELP elaboradas, prontas para submissão à Comissão","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"50","macro":"Revisão dos Desafios e Metas","etapa":"Consolidar Desafios e Metas do PELP","atividade":"Submeter à validação e aprovação da Comissão PELP","responsavel":"SUPROG","inicio":"2026-12-18","termino":"2026-12-18","duracao":0,"status_original":"Não iniciado","resultado":"Desafios e Metas do PELP submetidos e aprovados pela Comissão PELP","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"M3","macro":"Revisão dos Desafios e Metas","etapa":"Marco: Mapa Estratégico revisado e aprovado","atividade":"Marco: Mapa Estratégico revisado e aprovado","responsavel":"SUPROG","inicio":"2026-12-18","termino":"2026-12-18","duracao":1,"status_original":"Marco","resultado":"Mapa Estratégico revisado, com desafios e metas atualizados, formalmente aprovado pela Comissão PELP","obs":null,"pct":0,"ppa":"PPA 2028-2031","marco":true},{"id":"51","macro":"Revisão da Carteira de Projetos","etapa":"Atualização do catálogo de iniciativas por área de resultado","atividade":"Revisar catálogo de iniciativas públicas e privadas existentes","responsavel":"SUPROG/UGP","inicio":"2027-01-04","termino":"2027-01-15","duracao":11,"status_original":"Não iniciado","resultado":"Catálogo de iniciativas públicas e privadas existentes revisado e atualizado","obs":null,"pct":0,"ppa":"PPA 2028-2031","marco":false},{"id":"52","macro":"Revisão da Carteira de Projetos","etapa":"Atualização do catálogo de iniciativas por área de resultado","atividade":"Levantar projetos em execução, concluídos e planejados","responsavel":"SUPROG/UGP","inicio":"2027-01-18","termino":"2027-01-22","duracao":4,"status_original":"Não iniciado","resultado":"Projetos em execução, concluídos e planejados levantados por área de resultado","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"53","macro":"Revisão da Carteira de Projetos","etapa":"Revisão e priorização da carteira estratégica","atividade":"Identificar projetos estratégicos a manter, reformular ou excluir","responsavel":"SUPROG","inicio":"2027-01-18","termino":"2027-01-29","duracao":11,"status_original":"Não iniciado","resultado":"Projetos estratégicos classificados quanto à manutenção, reformulação ou exclusão da carteira","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"54","macro":"Revisão da Carteira de Projetos","etapa":"Atualização do catálogo de iniciativas por área de resultado","atividade":"Mobilizar atores privados e organizações sociais e mapear iniciativas privadas e do terceiro setor por eixo","responsavel":"SUPROG/CMMA2050","inicio":"2027-01-22","termino":"2027-01-29","duracao":7,"status_original":"Não iniciado","resultado":"Atores privados e organizações sociais mobilizados, com iniciativas do terceiro setor mapeadas por eixo","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"55","macro":"Revisão da Carteira de Projetos","etapa":"Revisão e priorização da carteira estratégica","atividade":"Identificar lacunas e novos projetos prioritários","responsavel":"SUPROG/CMMA2050","inicio":"2027-02-01","termino":"2027-02-04","duracao":3,"status_original":"Não iniciado","resultado":"Lacunas na carteira identificadas e novos projetos prioritários mapeados","obs":"Aplicado as câmaras técnicas","pct":0,"ppa":null,"marco":false},{"id":"56","macro":"Revisão da Carteira de Projetos","etapa":"Revisão e priorização da carteira estratégica","atividade":"Aplicar critérios de priorização: impacto, viabilidade e alinhamento estratégico","responsavel":"SUPROG","inicio":"2027-02-05","termino":"2027-02-12","duracao":7,"status_original":"Não iniciado","resultado":"Carteira de projetos priorizada com base em critérios de impacto, viabilidade e alinhamento estratégico","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"57","macro":"Revisão da Carteira de Projetos","etapa":"Validação da carteira de projetos atualizada","atividade":"Apresentar versão preliminar à Comissão Maranhão 2050","responsavel":"SUPROG","inicio":"2027-02-08","termino":"2027-02-08","duracao":0,"status_original":"Não iniciado","resultado":"Versão preliminar da carteira atualizada apresentada à Comissão Maranhão 2050","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"58","macro":"Revisão da Carteira de Projetos","etapa":"Validação da carteira de projetos atualizada","atividade":"Coletar e incorporar contribuições dos especialistas","responsavel":"SUPROG","inicio":"2027-02-09","termino":"2027-02-19","duracao":10,"status_original":"Não iniciado","resultado":"Contribuições de especialistas coletadas e incorporadas à carteira de projetos atualizada","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"59","macro":"Revisão da Carteira de Projetos","etapa":"Detalhar projetos estratégicos priorizados","atividade":"Detalhar objetivo, escopo, público-alvo e entregas de cada projeto e estimar valor total e prazo de execução","responsavel":"SUPROG/ÓRGÃOS SETORIAIS","inicio":"2027-02-22","termino":"2027-03-05","duracao":11,"status_original":"Não iniciado","resultado":"Objetivo, escopo, público-alvo, entregas, valor total e prazo de execução detalhados para cada projeto priorizado","obs":"Fichas técnicas padronizadas por projeto; alinhamento com SEPLAN para PPA 2028-2031","pct":0,"ppa":"PPA 2028-2031","marco":false},{"id":"60","macro":"Revisão da Carteira de Projetos","etapa":"Detalhar projetos estratégicos priorizados","atividade":"Elaborar fichas técnicas padronizadas dos projetos priorizados e alinhar projetos ao ciclo de elaboração do novo PPA","responsavel":"SUPROG","inicio":"2027-03-08","termino":"2027-03-12","duracao":4,"status_original":"Não iniciado","resultado":"Fichas técnicas padronizadas elaboradas e projetos priorizados alinhados ao ciclo de elaboração do PPA 2028-2031","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"61","macro":"Revisão da Carteira de Projetos","etapa":"Consolidar Carteira de Projetos atualizada","atividade":"Consolidar versão final da carteira de projetos com fichas técnicas, mapa de projetos e matriz de priorização","responsavel":"SUPROG","inicio":"2027-03-15","termino":"2027-03-26","duracao":11,"status_original":"Não iniciado","resultado":"Versão final da Carteira de Projetos consolidada, com fichas técnicas, mapa de projetos e matriz de priorização","obs":null,"pct":0,"ppa":"PPA 2028-2031","marco":false},{"id":"62","macro":"Revisão da Carteira de Projetos","etapa":"Consolidar Carteira de Projetos atualizada","atividade":"Submeter à validação da Comissão PELP","responsavel":"SUPROG","inicio":"2027-03-29","termino":"2027-03-31","duracao":2,"status_original":"Não iniciado","resultado":"Carteira de Projetos atualizada submetida e validada pela Comissão PELP","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"M4","macro":"Revisão da Carteira de Projetos","etapa":"Marco: Carteira de Projetos consolidada e aprovada","atividade":"Marco: Carteira de Projetos consolidada e aprovada","responsavel":"SUPROG","inicio":"2027-03-31","termino":"2027-03-31","duracao":1,"status_original":"Marco","resultado":"Carteira de Projetos consolidada, com fichas técnicas e priorização concluídas, formalmente aprovada pela Comissão PELP","obs":null,"pct":0,"ppa":"PPA 2028-2031","marco":true},{"id":"63","macro":"Comunicação e Institucionalização","etapa":"Consolidação do Plano revisado (versão completa e executiva)","atividade":"Compilar todos os produtos e subprodutos da revisão","responsavel":"SUPROG","inicio":"2027-04-01","termino":"2027-04-09","duracao":8,"status_original":"Não iniciado","resultado":"Produtos e subprodutos da revisão compilados, com coerência entre diagnóstico, metas, mapa estratégico e carteira de projetos verificada","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"64","macro":"Comunicação e Institucionalização","etapa":"Consolidação do Plano revisado (versão completa e executiva)","atividade":"Elaborar texto integrado do PELP revisado","responsavel":"SUPROG","inicio":"2027-04-12","termino":"2027-04-15","duracao":3,"status_original":"Não iniciado","resultado":"Texto integrado do PELP revisado elaborado","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"65","macro":"Comunicação e Institucionalização","etapa":"Consolidação do Plano revisado (versão completa e executiva)","atividade":"Produzir versão técnica completa e resumo executivo, garantindo coerência entre diagnóstico, metas, mapa estratégico e carteira de projetos","responsavel":"SUPROG","inicio":"2027-04-16","termino":"2027-04-19","duracao":3,"status_original":"Não iniciado","resultado":"Versão técnica completa e resumo executivo do PELP revisado produzidos","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"66","macro":"Comunicação e Institucionalização","etapa":"Audiência pública e participação social","atividade":"Divulgar prévia do plano para consulta online ","responsavel":"SUPROG/SOCIEDADE CIVIL","inicio":"2027-04-19","termino":"2027-04-23","duracao":4,"status_original":"Não iniciado","resultado":"Prévia do PELP revisado divulgada para consulta pública online","obs":"Ao menos 1 consulta pública online","pct":0,"ppa":null,"marco":false},{"id":"67","macro":"Comunicação e Institucionalização","etapa":"Audiência pública e participação social","atividade":"Sistematizar contribuições recebidas e incorporar ajustes pertinentes ao documento final","responsavel":"SUPROG","inicio":"2027-04-26","termino":"2027-04-30","duracao":4,"status_original":"Não iniciado","resultado":"Contribuições da consulta pública sistematizadas e ajustes pertinentes incorporados ao documento final","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"68","macro":"Comunicação e Institucionalização","etapa":"Aprovação do PELP atualizado pela Comissão","atividade":"Apresentar versão final à Comissão PELP em reunião plenária","responsavel":"SUPROG/CMMA2050","inicio":"2027-05-03","termino":"2027-05-03","duracao":0,"status_original":"Não iniciado","resultado":"Versão final do PELP revisado apresentada à Comissão PELP em reunião plenária","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"69","macro":"Comunicação e Institucionalização","etapa":"Plano de Comunicação do PELP revisado","atividade":"Construir estratégia de comunicação do PELP revisado","responsavel":"SUPROG/ASCOM","inicio":"2027-05-03","termino":"2027-05-07","duracao":4,"status_original":"Não iniciado","resultado":"Estratégia de comunicação do PELP revisado construída","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"70","macro":"Comunicação e Institucionalização","etapa":"Aprovação do PELP atualizado pela Comissão","atividade":"Realizar ajustes gráficos e diagramação final","responsavel":"SUPROG","inicio":"2027-05-04","termino":"2027-05-14","duracao":10,"status_original":"Não iniciado","resultado":"Ajustes gráficos e diagramação final do documento do PELP revisado concluídos","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"71","macro":"Comunicação e Institucionalização","etapa":"Elaboração de Projeto de Lei de atualização do PELP","atividade":"Redigir PL de atualização do Plano Maranhão 2050","responsavel":"SUPROG","inicio":"2027-05-10","termino":"2027-05-14","duracao":4,"status_original":"Não iniciado","resultado":"Minuta do Projeto de Lei de atualização do Plano Maranhão 2050 redigida","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"72","macro":"Comunicação e Institucionalização","etapa":"Plano de Comunicação do PELP revisado","atividade":"Definir identidade visual, materiais, canais e eventos de lançamento","responsavel":"SUPROG/ASCOM","inicio":"2027-05-10","termino":"2027-05-21","duracao":11,"status_original":"Não iniciado","resultado":"Identidade visual, materiais, canais e eventos de lançamento definidos para o PELP revisado","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"73","macro":"Comunicação e Institucionalização","etapa":"Elaboração de Projeto de Lei de atualização do PELP","atividade":"Definir tramitação e acompanhar processo legislativo até aprovação","responsavel":"SUPROG","inicio":"2027-05-17","termino":"2027-05-21","duracao":4,"status_original":"Não iniciado","resultado":"Tramitação do Projeto de Lei definida e processo legislativo acompanhado até sua aprovação","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"74","macro":"Comunicação e Institucionalização","etapa":"Plano de Comunicação do PELP revisado","atividade":"Produzir materiais de divulgação","responsavel":"SUPROG/ASCOM","inicio":"2027-05-24","termino":"2027-05-28","duracao":4,"status_original":"Não iniciado","resultado":"Materiais de divulgação do PELP revisado produzidos","obs":null,"pct":0,"ppa":null,"marco":false},{"id":"M5","macro":"Comunicação e Institucionalização","etapa":"Marco: PELP revisado publicado e lançado","atividade":"Marco: PELP revisado publicado e lançado","responsavel":"SUPROG","inicio":"2027-05-28","termino":"2027-05-28","duracao":1,"status_original":"Marco","resultado":"PELP Maranhão 2050 revisado oficialmente aprovado, publicado e comunicado à sociedade","obs":null,"pct":0,"ppa":null,"marco":true}]
+</script>
+<script>
+(function(){
+"use strict";
+
+/* ================= CONFIG ================= */
+var DATA_REF = new Date(2026,8,18); // 18/09/2026 - posição do painel
+var RAW = JSON.parse(document.getElementById('data-json').textContent);
+
+var MACRO_ORDER = ["Pré-Produtos","Análise Situacional","Revisão dos Desafios e Metas","Revisão da Carteira de Projetos","Comunicação e Institucionalização"];
+var MACRO_COLOR = {
+  "Pré-Produtos":"#1E2B54",
+  "Análise Situacional":"#1B8FA0",
+  "Revisão dos Desafios e Metas":"#E0A320",
+  "Revisão da Carteira de Projetos":"#D31E2B",
+  "Comunicação e Institucionalização":"#3D5A73"
+};
+var MACRO_SHORT = {
+  "Pré-Produtos":"Pré-Produtos",
+  "Análise Situacional":"Análise Situacional",
+  "Revisão dos Desafios e Metas":"Desafios e Metas",
+  "Revisão da Carteira de Projetos":"Carteira de Projetos",
+  "Comunicação e Institucionalização":"Comunicação"
+};
+
+var STATUS_META = {
+  nao_iniciado:{label:"Não iniciado", color:"#9AA1B0", soft:"#EEF0F3", cls:"ni"},
+  em_andamento:{label:"Em andamento", color:"#1B8FA0", soft:"#E4F4F6", cls:"and"},
+  atrasado:{label:"Atrasado", color:"#D31E2B", soft:"#FBE7E8", cls:"atr"},
+  concluido:{label:"Concluído", color:"#3FA66B", soft:"#E5F5EC", cls:"con"},
+  marco:{label:"Marco", color:"#E0A320", soft:"#FCF1DC", cls:"mar"},
+  marco_vencido:{label:"Marco vencido", color:"#D31E2B", soft:"#FBE7E8", cls:"atr"}
+};
+
+var DAY_MS = 86400000;
+
+/* ================= HELPERS ================= */
+function parseDate(s){
+  var p = s.split('-');
+  return new Date(parseInt(p[0]),parseInt(p[1])-1,parseInt(p[2]));
+}
+function fmtDate(d){
+  var dd = String(d.getDate()).padStart(2,'0');
+  var mm = String(d.getMonth()+1).padStart(2,'0');
+  var yy = d.getFullYear();
+  return dd+'/'+mm+'/'+yy;
+}
+function fmtDateShort(d){
+  var dd = String(d.getDate()).padStart(2,'0');
+  var mm = String(d.getMonth()+1).padStart(2,'0');
+  return dd+'/'+mm+'/'+String(d.getFullYear()).slice(2);
+}
+function diffDays(a,b){ return Math.round((b-a)/DAY_MS); }
+function monthLabel(d){
+  var months=['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+  return months[d.getMonth()]+'/'+String(d.getFullYear()).slice(2);
+}
+function respTokens(r){
+  if(!r) return [];
+  return r.split('/').map(function(x){return x.trim();}).filter(Boolean);
+}
+function esc(s){
+  if(s===null||s===undefined) return '';
+  return String(s).replace(/[&<>"]/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});
+}
+
+/* ================= NORMALIZE + COMPUTE STATUS ================= */
+var ACTIVITIES = RAW.map(function(a){
+  var ini = parseDate(a.inicio);
+  var term = parseDate(a.termino);
+  var status;
+  if(a.marco){
+    status = (a.status_original === 'Concluído') ? 'concluido' : ((term < DATA_REF) ? 'marco_vencido' : 'marco');
+  } else if(a.status_original === 'Concluído' || (a.pct||0) >= 100){
+    status = 'concluido';
+  } else if(a.status_original === 'Em andamento'){
+    // respeita o status reportado; só sinaliza atraso se o prazo já venceu
+    status = (term < DATA_REF) ? 'atrasado' : 'em_andamento';
+  } else if(a.status_original === 'Não iniciado'){
+    status = (term < DATA_REF) ? 'atrasado' : 'nao_iniciado';
+  } else {
+    // fallback (status ausente/inesperado): infere a partir das datas
+    if(term < DATA_REF) status = 'atrasado';
+    else if(ini <= DATA_REF && DATA_REF <= term) status = 'em_andamento';
+    else status = 'nao_iniciado';
+  }
+  return Object.assign({}, a, {
+    iniDate: ini, termDate: term,
+    status: status,
+    respTokens: respTokens(a.responsavel)
+  });
+});
+
+var PROJECT_START = new Date(Math.min.apply(null, ACTIVITIES.map(function(a){return a.iniDate;})));
+var PROJECT_END = new Date(Math.max.apply(null, ACTIVITIES.map(function(a){return a.termDate;})));
+var TOTAL_DAYS = diffDays(PROJECT_START, PROJECT_END);
+
+var ALL_MACROS = MACRO_ORDER.filter(function(m){return ACTIVITIES.some(function(a){return a.macro===m;});});
+var ALL_RESPS = Array.from(new Set(ACTIVITIES.reduce(function(acc,a){return acc.concat(a.respTokens);},[]))).sort();
+var ALL_STATUS = ['nao_iniciado','em_andamento','atrasado','concluido','marco','marco_vencido'].filter(function(s){
+  return ACTIVITIES.some(function(a){return a.status===s;});
+});
+
+/* ================= STATE ================= */
+var state = {
+  macros: new Set(),
+  resps: new Set(),
+  statuses: new Set(),
+  search: '',
+  collapsedGroups: new Set()
+};
+
+/* ================= FILTERING ================= */
+function getFiltered(){
+  return ACTIVITIES.filter(function(a){
+    if(state.macros.size && !state.macros.has(a.macro)) return false;
+    if(state.resps.size && !a.respTokens.some(function(r){return state.resps.has(r);})) return false;
+    if(state.statuses.size && !state.statuses.has(a.status)) return false;
+    if(state.search){
+      var hay = (a.atividade+' '+a.etapa+' '+(a.responsavel||'')).toLowerCase();
+      if(hay.indexOf(state.search.toLowerCase())===-1) return false;
+    }
+    return true;
+  });
+}
+
+/* ================= RENDER: FILTER CHIPS ================= */
+function countFor(kind, value){
+  return ACTIVITIES.filter(function(a){
+    if(kind==='macro') return a.macro===value;
+    if(kind==='resp') return a.respTokens.indexOf(value)!==-1;
+    if(kind==='status') return a.status===value;
+  }).length;
+}
+
+function renderChips(){
+  var elMacro = document.getElementById('chipsMacro');
+  elMacro.innerHTML = ALL_MACROS.map(function(m){
+    var active = state.macros.has(m);
+    return '<div class="chip'+(active?' active':'')+'" data-kind="macro" data-val="'+esc(m)+'">'+esc(MACRO_SHORT[m]||m)+' <span class="cnt">'+countFor('macro',m)+'</span></div>';
+  }).join('');
+
+  var elResp = document.getElementById('chipsResp');
+  elResp.innerHTML = ALL_RESPS.map(function(r){
+    var active = state.resps.has(r);
+    return '<div class="chip'+(active?' active':'')+'" data-kind="resp" data-val="'+esc(r)+'">'+esc(r)+' <span class="cnt">'+countFor('resp',r)+'</span></div>';
+  }).join('');
+
+  var elStatus = document.getElementById('chipsStatus');
+  elStatus.innerHTML = ALL_STATUS.map(function(s){
+    var active = state.statuses.has(s);
+    var meta = STATUS_META[s];
+    return '<div class="chip'+(active?' active':'')+'" data-kind="status" data-val="'+s+'">'+meta.label+' <span class="cnt">'+countFor('status',s)+'</span></div>';
+  }).join('');
+
+  Array.prototype.forEach.call(document.querySelectorAll('.chip'), function(chip){
+    chip.addEventListener('click', function(){
+      var kind = chip.getAttribute('data-kind');
+      var val = chip.getAttribute('data-val');
+      var set = kind==='macro'?state.macros: kind==='resp'?state.resps: state.statuses;
+      if(set.has(val)) set.delete(val); else set.add(val);
+      renderAll();
+    });
+  });
+}
+
+/* ================= RENDER: KPIs ================= */
+function renderKPIs(filtered){
+  var nonMarco = filtered.filter(function(a){return !a.marco;});
+  var marcosFiltrados = filtered.filter(function(a){return a.marco;});
+  var counts = {
+    total: nonMarco.length,
+    em_andamento: nonMarco.filter(function(a){return a.status==='em_andamento';}).length,
+    atrasado: nonMarco.filter(function(a){return a.status==='atrasado';}).length + marcosFiltrados.filter(function(a){return a.status==='marco_vencido';}).length,
+    nao_iniciado: nonMarco.filter(function(a){return a.status==='nao_iniciado';}).length,
+    concluido: nonMarco.filter(function(a){return a.status==='concluido';}).length,
+    marcos: marcosFiltrados.length
+  };
+  var cards = [
+    {key:'total', cls:'total', lbl:'Atividades no filtro', val:counts.total, sub:'de '+ACTIVITIES.filter(function(a){return !a.marco;}).length+' no cronograma total'},
+    {key:'andamento', cls:'andamento', lbl:'Em andamento', val:counts.em_andamento, sub:counts.total? Math.round(counts.em_andamento/counts.total*100)+'% das atividades filtradas':'—'},
+    {key:'atraso', cls:'atraso', lbl:'Atrasadas', val:counts.atrasado, sub: counts.atrasado>0 ? 'inclui atividades e marcos vencidos' : 'nenhuma pendência'},
+    {key:'naoiniciado', cls:'naoiniciado', lbl:'Não iniciadas', val:counts.nao_iniciado, sub:'aguardando início'},
+    {key:'concluido', cls:'concluido', lbl:'Concluídas', val:counts.concluido, sub:'entregues'},
+    {key:'marco', cls:'marco', lbl:'Marcos no filtro', val:counts.marcos, sub:'de 5 marcos totais'}
+  ];
+  document.getElementById('kpiGrid').innerHTML = cards.map(function(c){
+    return '<div class="kpi '+c.cls+'"><div class="lbl">'+c.lbl+'</div><div class="val">'+c.val+'</div><div class="sub">'+c.sub+'</div></div>';
+  }).join('');
+
+  // progress bar: tempo decorrido do cronograma
+  var elapsed = Math.max(0, Math.min(TOTAL_DAYS, diffDays(PROJECT_START, DATA_REF)));
+  var pctTempo = Math.round(elapsed/TOTAL_DAYS*100);
+  document.getElementById('pbTempo').style.width = pctTempo+'%';
+  document.getElementById('pbTempoLabel').textContent = pctTempo+'% ('+elapsed+' de '+TOTAL_DAYS+' dias)';
+  document.getElementById('pbTempoIni').textContent = monthLabel(PROJECT_START);
+  document.getElementById('pbTempoFim').textContent = monthLabel(PROJECT_END);
+
+  document.getElementById('metaTotal').textContent = ACTIVITIES.filter(function(a){return !a.marco;}).length;
+
+  // alert banner uses GLOBAL atrasadas (independent of filter) so management always sees true risk
+  renderAlertBanner();
+}
+
+function renderAlertBanner(){
+  var atrasadas = ACTIVITIES.filter(function(a){return !a.marco && a.status==='atrasado';});
+  var marcosVencidos = ACTIVITIES.filter(function(a){return a.marco && a.status==='marco_vencido';});
+  var el = document.getElementById('alertBanner');
+  var totalRisco = atrasadas.length + marcosVencidos.length;
+  if(totalRisco===0){
+    el.innerHTML = '<div class="alert-banner ok"><div class="aicon">✓</div><div class="atext"><strong>Nenhuma atividade em atraso</strong><p>Todas as atividades e marcos estão dentro do prazo previsto em relação à posição de '+fmtDate(DATA_REF)+'.</p></div></div>';
+    return;
+  }
+  var items = atrasadas.concat(marcosVencidos).sort(function(a,b){return a.termDate-b.termDate;});
+  var html = '<div class="alert-banner"><div class="aicon">!</div><div class="atext" style="flex:1">';
+  html += '<strong>'+totalRisco+' item(ns) em atraso</strong>';
+  html += '<p>Atividades com término previsto anterior a '+fmtDate(DATA_REF)+' e ainda não concluídas. Ação recomendada: replanejar prazos ou reforçar equipe responsável.</p>';
+  html += '<div class="alert-list">';
+  html += items.slice(0,8).map(function(a){
+    var atraso = diffDays(a.termDate, DATA_REF);
+    return '<div class="alert-item"><div class="ai-left">'+(a.marco?'🏁 ':'')+'<b>'+esc(a.id)+'.</b> '+esc(a.atividade)+' <span style="color:var(--text-muted)">— '+esc(a.responsavel||'')+'</span></div><div class="ai-tag">'+atraso+' dia(s) de atraso</div></div>';
+  }).join('');
+  html += '</div></div></div>';
+  el.innerHTML = html;
+}
+
+/* ================= RENDER: MILESTONES ================= */
+function renderMilestones(){
+  var marcos = ACTIVITIES.filter(function(a){return a.marco;}).sort(function(a,b){return a.termDate-b.termDate;});
+  var html = marcos.map(function(m,i){
+    var done = m.status==='concluido';
+    var late = m.status==='marco_vencido';
+    var days = diffDays(DATA_REF, m.termDate);
+    var daysLabel = done ? 'concluído' : (late ? Math.abs(days)+' dia(s) em atraso' : ('faltam '+days+' dias'));
+    var badgeCls = done ? ' done' : (late ? ' late' : '');
+    var daysCls = done ? ' done' : (late ? ' late' : '');
+    return '<div class="ms-card">'+
+      '<div class="ms-top"><div class="ms-badge'+badgeCls+'">'+(done?'✓':'M'+(i+1))+'</div><div class="ms-days'+daysCls+'">'+daysLabel+'</div></div>'+
+      '<div class="ms-name">'+esc(m.etapa.replace(/^Marco:\s*/,''))+'</div>'+
+      '<div class="ms-date">📅 '+fmtDate(m.termDate)+'</div>'+
+      '<div class="ms-macro" style="color:'+MACRO_COLOR[m.macro]+'">'+esc(MACRO_SHORT[m.macro]||m.macro)+'</div>'+
+      '</div>';
+  }).join('');
+  document.getElementById('milestonesGrid').innerHTML = html;
+}
+
+/* ================= RENDER: NEXT ACTIONS ================= */
+function renderNextActions(filtered){
+  var horizon = new Date(DATA_REF.getTime() + 45*DAY_MS);
+  var next = filtered.filter(function(a){
+    return !a.marco && (a.status==='em_andamento' || a.status==='nao_iniciado') && a.iniDate <= horizon;
+  }).sort(function(a,b){return a.iniDate-b.iniDate;}).slice(0,6);
+
+  var wrap = document.getElementById('nextActionsWrap');
+  if(!next.length){
+    wrap.innerHTML = '<div class="empty-note">Nenhuma atividade a iniciar nos próximos 45 dias para os filtros selecionados.</div>';
+    return;
+  }
+  wrap.innerHTML = '<div class="next-grid">'+next.map(function(a){
+    var starting = a.status==='nao_iniciado';
+    var daysLabel = starting ? ('inicia em '+diffDays(DATA_REF,a.iniDate)+' dia(s)') : ('termina em '+Math.max(0,diffDays(DATA_REF,a.termDate))+' dia(s)');
+    return '<div class="na-card'+(starting?' ni':'')+'">'+
+      '<div class="na-top"><span class="macro-pill" style="background:'+MACRO_COLOR[a.macro]+'">'+esc(MACRO_SHORT[a.macro]||a.macro)+'</span><span class="na-days">'+daysLabel+'</span></div>'+
+      '<div class="na-title">'+esc(a.id)+'. '+esc(a.atividade)+'</div>'+
+      '<div class="na-meta"><span>'+fmtDateShort(a.iniDate)+' → '+fmtDateShort(a.termDate)+'</span></div>'+
+      '<div class="na-resp">'+a.respTokens.map(function(r){return '<span class="tag-resp">'+esc(r)+'</span>';}).join('')+'</div>'+
+      '</div>';
+  }).join('')+'</div>';
+}
+
+/* ================= RENDER: GANTT ================= */
+var DAY_W = 5.2;
+
+function xFor(date){ return diffDays(PROJECT_START, date) * DAY_W; }
+
+function renderGantt(filtered){
+  var legend = ALL_STATUS.map(function(s){
+    var m = STATUS_META[s];
+    return '<div class="leg-item"><span class="leg-swatch" style="background:'+m.color+'"></span>'+m.label+'</div>';
+  }).join('') + '<div class="leg-item"><span class="leg-swatch" style="background:var(--red);width:3px;height:14px;border-radius:0;"></span>Hoje ('+fmtDate(DATA_REF)+')</div>';
+  document.getElementById('ganttLegend').innerHTML = legend;
+
+  var timelineWidth = TOTAL_DAYS * DAY_W + 40;
+
+  // group by macro, preserve order
+  var groups = ALL_MACROS.map(function(m){
+    return { macro:m, items: filtered.filter(function(a){return a.macro===m;}).sort(function(a,b){return a.iniDate-b.iniDate;}) };
+  }).filter(function(g){return g.items.length;});
+
+  // ---- month header ----
+  var months = [];
+  var cur = new Date(PROJECT_START.getFullYear(), PROJECT_START.getMonth(), 1);
+  while(cur <= PROJECT_END){
+    var next = new Date(cur.getFullYear(), cur.getMonth()+1, 1);
+    var segStart = cur < PROJECT_START ? PROJECT_START : cur;
+    var x = xFor(segStart);
+    months.push({label:monthLabel(cur), x:x});
+    cur = next;
+  }
+  var monthHtml = months.map(function(m){
+    return '<div class="g-month" style="left:'+m.x+'px">'+m.label+'</div>';
+  }).join('');
+
+  // ---- rows ----
+  var labelHtml = '<div class="g-label-spacer" style="height:30px;"></div>';
+  var trackHtml = '';
+
+  groups.forEach(function(g, gi){
+    var collapsed = state.collapsedGroups.has(g.macro);
+    labelHtml += '<div class="g-group-header'+(collapsed?' collapsed':'')+'" style="background:'+MACRO_COLOR[g.macro]+'" data-group="'+esc(g.macro)+'">'+
+      '<span class="gh-caret">▾</span><span>'+esc(MACRO_SHORT[g.macro]||g.macro)+'</span><span class="gh-count">'+g.items.length+'</span></div>';
+    trackHtml += '<div class="g-timeline-group-bg" style="background:'+MACRO_COLOR[g.macro]+'22"></div>';
+
+    if(!collapsed){
+      g.items.forEach(function(a){
+        labelHtml += '<div class="g-row-label'+(a.marco?' marco-row':'')+'" title="'+esc(a.atividade)+'"><span class="g-id">'+esc(a.id)+'</span><span>'+esc(a.atividade.length>42?a.atividade.slice(0,42)+'…':a.atividade)+'</span></div>';
+
+        var meta = STATUS_META[a.status];
+        if(a.marco){
+          trackHtml += '<div class="g-row-track"><div class="g-milestone" style="left:'+xFor(a.termDate)+'px; background:'+meta.color+'"></div></div>';
+        } else {
+          var left = xFor(a.iniDate);
+          var width = Math.max(xFor(a.termDate)-xFor(a.iniDate), 8);
+          var fillPct = a.status==='concluido' ? 100 : (a.pct||0);
+          trackHtml += '<div class="g-row-track"><div class="g-bar" style="left:'+left+'px;width:'+width+'px;background:'+meta.soft+';border:1px solid '+meta.color+'"><div class="g-bar-fill" style="width:'+fillPct+'%; background:'+meta.color+'"></div></div></div>';
+        }
+      });
+    }
+  });
+
+  var todayX = xFor(DATA_REF);
+  var gridLines = months.map(function(m){return '<div class="g-grid-line" style="left:'+m.x+'px"></div>';}).join('');
+
+  var html = ''+
+    '<div class="gantt-body-wrap">'+
+      '<div class="gantt-labels">'+labelHtml+'</div>'+
+      '<div class="gantt-timeline" style="width:'+timelineWidth+'px">'+
+        '<div class="g-month-row">'+monthHtml+'</div>'+
+        '<div style="position:relative;">'+
+          gridLines+
+          '<div class="g-today-line" style="left:'+todayX+'px"></div>'+
+          '<div class="g-today-tag" style="left:'+todayX+'px">HOJE</div>'+
+          trackHtml+
+        '</div>'+
+      '</div>'+
+    '</div>';
+
+  document.getElementById('ganttInner').innerHTML = html;
+
+  Array.prototype.forEach.call(document.querySelectorAll('.g-group-header'), function(h){
+    h.addEventListener('click', function(){
+      var g = h.getAttribute('data-group');
+      if(state.collapsedGroups.has(g)) state.collapsedGroups.delete(g); else state.collapsedGroups.add(g);
+      renderGantt(getFiltered());
+    });
+  });
+}
+
+/* ================= RENDER: TABLE ================= */
+function renderTable(filtered){
+  var sorted = filtered.slice().sort(function(a,b){return a.iniDate-b.iniDate;});
+  document.getElementById('resultCount').textContent = sorted.length+' atividade(s) encontrada(s) para os filtros selecionados';
+  document.getElementById('tableBody').innerHTML = sorted.map(function(a){
+    var meta = STATUS_META[a.status];
+    var respHtml = a.respTokens.map(function(r){return '<span class="resp-pill">'+esc(r)+'</span>';}).join('');
+    return '<tr class="'+(a.status==='atrasado'||a.status==='marco_vencido'?'is-late':'')+'">'+
+      '<td><b>'+esc(a.id)+'</b></td>'+
+      '<td><span class="macro-pill" style="background:'+MACRO_COLOR[a.macro]+'">'+esc(MACRO_SHORT[a.macro]||a.macro)+'</span></td>'+
+      '<td class="col-atividade"><div class="etapa">'+esc(a.etapa)+'</div>'+esc(a.atividade)+(a.ppa?'<div class="ppa-pill">'+esc(a.ppa)+'</div>':'')+'</td>'+
+      '<td>'+respHtml+'</td>'+
+      '<td>'+fmtDateShort(a.iniDate)+'</td>'+
+      '<td>'+fmtDateShort(a.termDate)+'</td>'+
+      '<td><span class="badge-status '+meta.cls+'">'+meta.label+'</span></td>'+
+      '<td>'+(a.marco?'—':(function(){var p=a.status==='concluido'?100:(a.pct||0); return p+'%<div class="mini-bar-outer"><div class="mini-bar-inner" style="width:'+p+'%"></div></div>';})())+'</td>'+
+      '<td class="col-resultado">'+esc(a.resultado||'—')+'</td>'+
+      '</tr>';
+  }).join('');
+}
+
+/* ================= MAIN RENDER ================= */
+function renderAll(){
+  renderChips();
+  var filtered = getFiltered();
+  renderKPIs(filtered);
+  renderNextActions(filtered);
+  renderGantt(filtered);
+  renderTable(filtered);
+}
+
+document.getElementById('searchInput').addEventListener('input', function(e){
+  state.search = e.target.value;
+  renderAll();
+});
+document.getElementById('btnReset').addEventListener('click', function(){
+  state.macros.clear(); state.resps.clear(); state.statuses.clear(); state.search='';
+  document.getElementById('searchInput').value='';
+  renderAll();
+});
+
+renderMilestones();
+renderAll();
+
+})();
+
+</script>
+</body>
+</html>
