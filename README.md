@@ -19,6 +19,15 @@ Painel gerencial (HTML autocontido — sem backend, sem build) de acompanhamento
 
 Essa URL vai abrir direto o `index.html` — ou seja, o painel completo, sem precisar digitar o nome do arquivo.
 
+## Datas no cabeçalho
+
+O painel mostra dois indicadores de data, propositalmente separados:
+
+- **Hoje** — calculado automaticamente pelo navegador de quem está vendo o painel. Anda sozinho, todo santo dia, sem precisar de nenhuma atualização.
+- **Dados da planilha atualizados em** — data fixa da última planilha processada. Só muda quando uma nova versão é publicada.
+
+Essa separação existe para evitar confusão: como "Hoje" avança sozinho mas os dados só avançam quando alguém manda uma planilha nova, pode aparecer uma atividade marcada como "atrasada" simplesmente porque a planilha está desatualizada, não porque a equipe está de fato atrasada. Sempre que isso acontecer, vale conferir a data de "Dados atualizados em" antes de tirar conclusões.
+
 ## Como atualizar (a cada nova versão da planilha)
 
 1. Eu gero a nova versão do `Dashboard_PELP_Maranhao_2050.html` (e do `index.html`, idênticos).
